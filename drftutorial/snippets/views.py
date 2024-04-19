@@ -29,6 +29,11 @@ class SnippetViewSet(viewsets.ModelViewSet):
             .select_related('owner')
         )
 
+    def get_throttles(self):
+        if self.action == 'create':
+            self.throttle_scope = 'snippet_create'
+        return super().get_throttles()
+
     def perform_create(self, serializer):
         owner = self.request.user
         serializer.save(owner=owner)

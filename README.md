@@ -6,6 +6,11 @@
 
     For example `Snippet.objects.all().select_related('owner')`
 
+- API throttling
+
+    Authenticated users can do more requests per minute.
+    Also not many snippets can be created in one minute.
+
 ### Environment variables
 
 - POSTGRES_HOST
