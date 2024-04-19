@@ -3,9 +3,9 @@ from rest_framework import permissions, renderers, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer, UserSerializer
-from snippets.permissions import IsOwnerOrReadOnly
+from drftutorial.snippets.models import Snippet
+from drftutorial.snippets.serializers import SnippetSerializer, UserSerializer
+from drftutorial.snippets.permissions import IsOwnerOrReadOnly
 
 
 class SnippetViewSet(viewsets.ModelViewSet):
