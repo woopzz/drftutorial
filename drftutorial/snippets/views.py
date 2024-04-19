@@ -9,7 +9,6 @@ from snippets.permissions import IsOwnerOrReadOnly
 
 
 class SnippetViewSet(viewsets.ModelViewSet):
-    queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
@@ -23,6 +22,12 @@ class SnippetViewSet(viewsets.ModelViewSet):
     def highlight(self, request, *args, **kwargs):
         snippet = self.get_object()
         return Response(snippet.highlighted)
+
+    def get_queryset(self):
+        return (
+            Snippet.objects.all()
+            .select_related('owner')
+        )
 
     def perform_create(self, serializer):
         owner = self.request.user

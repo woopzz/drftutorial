@@ -15,8 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include
+from django.conf import settings
 
 urlpatterns = [
     path('', include('snippets.urls')),
     path('api-auth/', include('rest_framework.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns.append(
+        path('debug/silk/', include('silk.urls', namespace='silk')),
+    )

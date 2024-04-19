@@ -27,7 +27,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))
 
 ALLOWED_HOSTS = cast_to_literal(os.environ['ALLOWED_HOSTS'])
 
@@ -128,3 +127,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))
+if DEBUG:
+    INSTALLED_APPS.append('silk')
+    MIDDLEWARE.append('silk.middleware.SilkyMiddleware')

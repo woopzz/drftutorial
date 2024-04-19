@@ -1,5 +1,11 @@
 # An extended Django REST Framework tutorial application
 
+### Differences
+
+- Query optimization
+
+    For example `Snippet.objects.all().select_related('owner')`
+
 ### Environment variables
 
 - POSTGRES_HOST
