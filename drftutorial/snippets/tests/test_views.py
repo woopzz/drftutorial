@@ -34,6 +34,49 @@ class TestUserViewSet(Common, APITestCase):
             UserSerializer(user, context={'request': response.wsgi_request}).data,
         )
 
+    def test_should_order_by_username(self):
+        anna = self.create_user(username='Anna')
+        zac = self.create_user(username='Zac')
+
+        response = self.client.get(reverse('user-list'), data={'ordering': 'username'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(
+            response.data['results'],
+            UserSerializer([anna, zac], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+        response = self.client.get(reverse('user-list'), data={'ordering': '-username'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(
+            response.data['results'],
+            UserSerializer([zac, anna], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+    def test_should_search_by_username(self):
+        john = self.create_user(username='John')
+        jonathan = self.create_user(username='Jonathan')
+
+        response = self.client.get(reverse('user-list'), data={'search': 'abc'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 0)
+        self.assertEqual(response.data['results'], [])
+
+        response = self.client.get(reverse('user-list'), data={'search': 'joh'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(
+            response.data['results'],
+            UserSerializer([john], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+        response = self.client.get(reverse('user-list'), data={'search': 'jo'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(
+            response.data['results'],
+            UserSerializer([john, jonathan], many=True, context={'request': response.wsgi_request}).data,
+        )
+
 
 class TestSnippetViewSet(Common, APITestCase):
 
@@ -129,3 +172,89 @@ class TestSnippetViewSet(Common, APITestCase):
             self.client.delete(reverse('snippet-detail', args=(snippet.id,))).status_code,
             httpstatus.HTTP_403_FORBIDDEN,
         )
+
+    def test_should_order_by_created(self):
+        owner = self.create_user()
+        first_snippet = self.create_snippet(owner=owner)
+        second_snippet = self.create_snippet(owner=owner)
+
+        response = self.client.get(reverse('snippet-list'), data={'ordering': 'created'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([first_snippet, second_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+        response = self.client.get(reverse('snippet-list'), data={'ordering': '-created'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([second_snippet, first_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+    def test_should_filter_by_language(self):
+        owner = self.create_user()
+        java_snippet = self.create_snippet(owner=owner, language='java')
+        self.create_snippet(owner=owner, language='php')
+
+        response = self.client.get(reverse('snippet-list'), data={'language': 'java'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([java_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+    def test_should_filter_by_style(self):
+        owner = self.create_user()
+        self.create_snippet(owner=owner, style='emacs')
+        vim_snippet = self.create_snippet(owner=owner, style='vim')
+
+        response = self.client.get(reverse('snippet-list'), data={'style': 'vim'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([vim_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+    def test_should_filter_by_owner(self):
+        john = self.create_user(username='John')
+        jade = self.create_user(username='Jade')
+        self.create_snippet(owner=john)
+        jade_snippet = self.create_snippet(owner=jade)
+
+        response = self.client.get(reverse('snippet-list'), data={'owner': jade.id})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([jade_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+    def test_should_search_by_title_and_code(self):
+        owner = self.create_user()
+        first_snippet = self.create_snippet(owner=owner, title='first title')
+        second_snippet = self.create_snippet(owner=owner, title='second title')
+        third_snippet = self.create_snippet(owner=owner, code='the first code piece among them all')
+
+        response = self.client.get(reverse('snippet-list'), data={'search': 'title'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([first_snippet, second_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+        response = self.client.get(reverse('snippet-list'), data={'search': 'first'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(
+            response.data['results'],
+            SnippetSerializer([first_snippet, third_snippet], many=True, context={'request': response.wsgi_request}).data,
+        )
+
+        response = self.client.get(reverse('snippet-list'), data={'search': 'long long'})
+        self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
+        self.assertEqual(response.data['count'], 0)
+        self.assertEqual(response.data['results'], [])

@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-from rest_framework import permissions, renderers, viewsets
+from rest_framework import permissions, renderers, viewsets, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django_filters.rest_framework import DjangoFilterBackend
 
 from drftutorial.snippets.models import Snippet
 from drftutorial.snippets.serializers import SnippetSerializer, UserSerializer
@@ -14,6 +15,10 @@ class SnippetViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly,
     ]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['language', 'style', 'owner']
+    search_fields = ['title', 'code']
+    ordering_fields = ['created']
 
     @action(
         detail=True,
@@ -40,5 +45,8 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['username']
+    ordering_fields = ['username']

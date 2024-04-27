@@ -12,6 +12,7 @@
     Also not many snippets can be created in one minute.
 
 - Tests
+- Filtering. Ordering. Searching.
 
 ### Environment variables
 
