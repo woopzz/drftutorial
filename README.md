@@ -11,6 +11,8 @@
     Authenticated users can do more requests per minute.
     Also not many snippets can be created in one minute.
 
+- Tests
+
 ### Environment variables
 
 - POSTGRES_HOST
