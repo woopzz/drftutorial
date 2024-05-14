@@ -3,6 +3,7 @@ from unittest.mock import Mock
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from drftutorial.snippets.models import Snippet
 
@@ -24,6 +25,10 @@ class Common(TestCase):
         super().tearDown()
         for func in self._run_on_tear_down:
             func()
+
+    def create_token_and_authenticate(self, user):
+        token = RefreshToken.for_user(user)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token.access_token}')
 
     def create_user(self, **values):
         values.setdefault('username', 'test')

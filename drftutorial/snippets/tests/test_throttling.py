@@ -16,14 +16,18 @@ class TestThrottling(Common, APITestCase):
         self._make_requests_and_check_response_status(request, 1, httpstatus.HTTP_429_TOO_MANY_REQUESTS)
 
     def test_should_not_allow_more_than_60_rpm_for_auth_users(self):
-        self.client.force_login(self.create_user())
+        user = self.create_user()
+        self.client.force_login(user)
+        self.create_token_and_authenticate(user)
         request = lambda: self.client.get(reverse('snippet-list'))
 
         self._make_requests_and_check_response_status(request, 60, httpstatus.HTTP_200_OK)
         self._make_requests_and_check_response_status(request, 1, httpstatus.HTTP_429_TOO_MANY_REQUESTS)
 
     def test_should_not_allow_to_create_more_than_10_snippets_in_one_minute(self):
-        self.client.force_login(self.create_user())
+        user = self.create_user()
+        self.client.force_login(user)
+        self.create_token_and_authenticate(user)
         request = lambda: self.client.post(reverse('snippet-list'), {'code': '"code"'})
 
         self._make_requests_and_check_response_status(request, 10, httpstatus.HTTP_201_CREATED)

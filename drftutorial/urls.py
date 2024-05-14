@@ -17,9 +17,23 @@ Including another URLconf
 from django.urls import path, include
 from django.conf import settings
 
+from rest_framework.routers import SimpleRouter
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+from drftutorial.snippets import views
+
+router = SimpleRouter()
+router.register(r'snippets', views.SnippetViewSet, basename='snippet')
+router.register(r'users', views.UserViewSet, basename='user')
+
 urlpatterns = [
-    path('', include('drftutorial.snippets.urls')),
-    path('api-auth/', include('rest_framework.urls')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='api_schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='api_schema'), name='api_docs'),
+
+    path('api/token/', views.EnhancedTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', views.EnhancedTokenRefreshView.as_view(), name='token_refresh'),
+
+    path('api/v1/', include(router.urls)),
 ]
 
 if settings.DEBUG:

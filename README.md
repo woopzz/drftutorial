@@ -13,6 +13,9 @@
 
 - Tests
 - Filtering. Ordering. Searching.
+- JWT instead of sessions.
+- OpenAPI (Swagger) instead of Browsable API.
+- LimitOffsetPagination instead of PageNumberPagination.
 
 ### Environment variables
 

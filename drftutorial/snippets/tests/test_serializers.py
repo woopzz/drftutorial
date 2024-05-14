@@ -17,19 +17,17 @@ class TestUserSerializer(Common):
         self.assertEqual(
             UserSerializer([first_user, second_user], many=True, context={'request': None}).data,
             [{
-                'url': reverse('user-detail', args=(first_user.id,)),
                 'id': first_user.id,
                 'username': first_user.username,
                 'snippets': [
-                    reverse('snippet-detail', args=(first_user_snippet_1.id,)),
-                    reverse('snippet-detail', args=(first_user_snippet_2.id,)),
+                    first_user_snippet_1.id,
+                    first_user_snippet_2.id,
                 ],
             }, {
-                'url': reverse('user-detail', args=(second_user.id,)),
                 'id': second_user.id,
                 'username': second_user.username,
                 'snippets': [
-                    reverse('snippet-detail', args=(second_user_snippet_1.id,)),
+                    second_user_snippet_1.id,
                 ],
             }]
         )
@@ -59,9 +57,7 @@ class TestSnippetSerializer(Common):
             SnippetSerializer([first_snippet, second_snippet], many=True, context={'request': None}).data,
             [
                 {
-                    'url': reverse('snippet-detail', args=(snippet.id,)),
                     'id': snippet.id,
-                    'highlight': reverse('snippet-highlight', args=(snippet.id,)),
                     'owner': owner.username,
                     'title': snippet.title,
                     'code': snippet.code,

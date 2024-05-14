@@ -116,6 +116,7 @@ class TestSnippetViewSet(Common, APITestCase):
         data = {'title': 'some title', 'code': 'some code', 'language': 'perl', 'style': 'vim'}
 
         self.client.force_login(user)
+        self.create_token_and_authenticate(user)
         response = self.client.post(reverse('snippet-list'), data=data)
         self.assertEqual(response.status_code, httpstatus.HTTP_201_CREATED)
 
@@ -132,6 +133,7 @@ class TestSnippetViewSet(Common, APITestCase):
         snippet = Snippet.objects.create(code='code', owner=owner)
 
         self.client.force_login(owner)
+        self.create_token_and_authenticate(owner)
         response = self.client.put(reverse('snippet-detail', args=(snippet.id,)), data={'code': 'new code'})
         self.assertEqual(response.status_code, httpstatus.HTTP_200_OK)
 
@@ -147,6 +149,7 @@ class TestSnippetViewSet(Common, APITestCase):
         snippet = Snippet.objects.create(code='code', owner=owner)
 
         self.client.force_login(owner)
+        self.create_token_and_authenticate(owner)
         response = self.client.delete(reverse('snippet-detail', args=(snippet.id,)))
         self.assertEqual(response.status_code, httpstatus.HTTP_204_NO_CONTENT)
 
@@ -155,7 +158,7 @@ class TestSnippetViewSet(Common, APITestCase):
 
     def test_should_forbid_anon_user_to_create_new_snippet(self):
         response = self.client.post(reverse('snippet-list'), data={'code': 'stub'})
-        self.assertEqual(response.status_code, httpstatus.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, httpstatus.HTTP_401_UNAUTHORIZED)
 
     def test_should_forbid_not_owner_to_manipulate_snippet(self):
         owner = self.create_user(username='owner')
@@ -163,6 +166,7 @@ class TestSnippetViewSet(Common, APITestCase):
 
         another_user = self.create_user(username='another user')
         self.client.force_login(another_user)
+        self.create_token_and_authenticate(another_user)
 
         self.assertEqual(
             self.client.put(reverse('snippet-detail', args=(snippet.id,)), data={'code': 'its mine'}).status_code,

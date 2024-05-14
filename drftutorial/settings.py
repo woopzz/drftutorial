@@ -13,6 +13,8 @@ import os
 import ast
 from pathlib import Path
 
+import datetime as dt
+
 def cast_to_literal(value):
     try:
         return ast.literal_eval(value)
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
+    'rest_framework_simplejwt.token_blacklist',
     'drftutorial.snippets',
 ]
 
@@ -125,7 +129,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
 
     'DEFAULT_THROTTLE_CLASSES': [
@@ -138,6 +142,31 @@ REST_FRAMEWORK = {
         'user': '60/minute',
         'snippet_create': '10/minute',
     },
+
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': dt.timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': dt.timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'extDRF Tutorial App',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SORT_OPERATIONS': False,
+    'ENUM_GENERATE_CHOICE_DESCRIPTION': False,
 }
 
 DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))
