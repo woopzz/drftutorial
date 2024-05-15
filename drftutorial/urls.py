@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.urls import path, include
 from django.conf import settings
+from django.contrib import admin
 
 from rest_framework.routers import SimpleRouter
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -34,6 +35,8 @@ urlpatterns = [
     path('api/token/refresh/', views.EnhancedTokenRefreshView.as_view(), name='token_refresh'),
 
     path('api/v1/', include(router.urls)),
+
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

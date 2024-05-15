@@ -16,6 +16,7 @@
 - JWT instead of sessions.
 - OpenAPI (Swagger) instead of Browsable API.
 - LimitOffsetPagination instead of PageNumberPagination.
+- Manage snippets on the admin portal.
 
 ### Environment variables
 

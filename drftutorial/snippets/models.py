@@ -16,7 +16,7 @@ DEFAULT_STYLE_CHOICE = 'friendly'
 
 class Snippet(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100, blank=True, default='')
+    title = models.CharField(max_length=100, default='Untitled')
     code = models.TextField()
     linenos = models.BooleanField(default=False)
     language = models.CharField(
@@ -35,6 +35,12 @@ class Snippet(models.Model):
         on_delete=models.CASCADE,
     )
     highlighted = models.TextField()
+
+    def __str__(self):
+        title = self.title or 'No title'
+        language = self.language or 'No language'
+        style = self.style or 'No style'
+        return f'{title} ({language}) ({style})'
 
     class Meta:
         ordering = ['created']
