@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'django_elasticsearch_dsl',
     'drf_spectacular',
     'rest_framework_simplejwt.token_blacklist',
     'drftutorial.snippets',
@@ -167,6 +168,12 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     'SORT_OPERATIONS': False,
     'ENUM_GENERATE_CHOICE_DESCRIPTION': False,
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.environ['ELASTICSEARCH_HOSTS'],
+    }
 }
 
 DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))

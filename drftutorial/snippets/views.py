@@ -7,10 +7,13 @@ from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from elasticsearch_dsl import Q
 
 from drftutorial.snippets.models import Snippet
 from drftutorial.snippets.serializers import SnippetSerializer, UserSerializer
 from drftutorial.snippets.permissions import IsOwnerOrReadOnly
+from drftutorial.snippets.filters import ElasticSeachFilter
+from drftutorial.snippets.documents import SnippetDocument, UserDocument
 
 EnhancedTokenObtainPairView = extend_schema_view(
     post=extend_schema(summary='Create a new JWT and a refresh token for it.', tags=['Tokens']),
@@ -37,9 +40,8 @@ class SnippetViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly,
     ]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [ElasticSeachFilter, DjangoFilterBackend, filters.OrderingFilter]
     filterset_fields = ['language', 'style', 'owner']
-    search_fields = ['title', 'code']
     ordering_fields = ['created']
 
     @action(
@@ -61,6 +63,11 @@ class SnippetViewSet(viewsets.ModelViewSet):
             self.throttle_scope = 'snippet_create'
         return super().get_throttles()
 
+    def get_elastic_search_query(self, search_term):
+        search_fields = ['title', 'code']
+        q = Q('multi_match', query=search_term, fields=search_fields, fuzziness='auto')
+        return SnippetDocument.search().query(q)
+
     def perform_create(self, serializer):
         owner = self.request.user
         serializer.save(owner=owner)
@@ -73,6 +80,8 @@ class SnippetViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all().order_by('username')
     serializer_class = UserSerializer
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['username']
+    filter_backends = [ElasticSeachFilter, filters.OrderingFilter]
     ordering_fields = ['username']
+
+    def get_elastic_search_query(self, search_term):
+        return UserDocument.search().query('match', username=search_term)

@@ -12,11 +12,12 @@
     Also not many snippets can be created in one minute.
 
 - Tests
-- Filtering. Ordering. Searching.
+- Filtering. Ordering.
 - JWT instead of sessions.
 - OpenAPI (Swagger) instead of Browsable API.
 - LimitOffsetPagination instead of PageNumberPagination.
 - Manage snippets on the admin portal.
+- Searching by ElasticSearch.
 
 ### Environment variables
 
@@ -29,3 +30,12 @@
 - DJANGO_SECRET_KEY
 - DJANGO_DEBUG
 - ALLOWED_HOSTS
+
+- ELASTICSEARCH_HOSTS (e.g. http://elasticsearch:9200)
+
+### Initial setup
+
+```bash
+# Create ElasticSearch indicies.
+python manage.py search_index --rebuild
+```
