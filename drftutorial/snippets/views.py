@@ -84,4 +84,4 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     ordering_fields = ['username']
 
     def get_elastic_search_query(self, search_term):
-        return UserDocument.search().query('match', username=search_term)
+        return UserDocument.search().query('wildcard', username=f'*{search_term}*')
