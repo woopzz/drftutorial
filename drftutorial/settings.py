@@ -176,6 +176,11 @@ ELASTICSEARCH_DSL = {
     }
 }
 
+ELASTICSEARCH_INDEX_NAMES = {
+    'snippet': 'snippet',
+    'user': 'user',
+}
+
 DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))
 if DEBUG:
     INSTALLED_APPS.append('silk')

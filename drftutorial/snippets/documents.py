@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 
 from django_elasticsearch_dsl import Document
@@ -9,7 +10,7 @@ from drftutorial.snippets.models import Snippet
 @registry.register_document
 class SnippetDocument(Document):
     class Index:
-        name = 'snippets'
+        name = settings.ELASTICSEARCH_INDEX_NAMES['snippet']
         settings = {
             'number_of_shards': 1,
             'number_of_replicas': 0,
@@ -23,7 +24,7 @@ class SnippetDocument(Document):
 @registry.register_document
 class UserDocument(Document):
     class Index:
-        name = 'users'
+        name = settings.ELASTICSEARCH_INDEX_NAMES['user']
         settings = {
             'number_of_shards': 1,
             'number_of_replicas': 0,
