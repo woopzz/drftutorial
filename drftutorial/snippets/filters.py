@@ -10,9 +10,6 @@ class ElasticSeachFilter(filters.BaseFilterBackend):
     search_title = 'Search'
     search_description = 'A search term.'
 
-    def get_elastic_search_query(self, view, request):
-        return getattr(view, 'get_elastic_search_query', None)
-
     def filter_queryset(self, request, queryset, view):
         get_elastic_search_query = getattr(view, 'get_elastic_search_query', None)
         search_term = request.query_params.get(self.search_param)
