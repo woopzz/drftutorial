@@ -11,7 +11,10 @@
             ],
             "django": true,
             "program": "${workspaceFolder}/manage.py",
-            "console": "internalConsole"
+            "console": "internalConsole",
+            "env": {
+                "DJANGO_DEBUG": "True",
+            }
         }
     ]
 }
