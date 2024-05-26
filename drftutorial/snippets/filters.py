@@ -16,7 +16,7 @@ class ElasticSeachFilter(filters.BaseFilterBackend):
         if not (get_elastic_search_query and search_term):
             return queryset
 
-        return get_elastic_search_query(search_term).filter_queryset(queryset)
+        return get_elastic_search_query(search_term).filter_queryset(queryset, keep_search_order=False)
 
     def get_schema_fields(self, view):
         assert coreapi is not None, 'coreapi must be installed to use `get_schema_fields()`'
