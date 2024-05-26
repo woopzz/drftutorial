@@ -1,3 +1,5 @@
+from django.core.management import call_command
+
 from unittest.mock import Mock
 
 from django.test import TestCase
@@ -37,3 +39,6 @@ class Common(TestCase):
 
     def create_snippet(self, **values):
         return Snippet.objects.create(**values)
+
+def force_rebuild_indices():
+    call_command('search_index', '--rebuild', '-f')

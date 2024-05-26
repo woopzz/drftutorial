@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 
 from drftutorial.snippets.models import Snippet
 from drftutorial.snippets.serializers import UserSerializer, SnippetSerializer
-from .common import Common
+from .common import Common, force_rebuild_indices
 
 
 class TestUserViewSet(Common, APITestCase):
@@ -53,6 +53,8 @@ class TestUserViewSet(Common, APITestCase):
         )
 
     def test_should_search_by_username(self):
+        force_rebuild_indices()
+
         john = self.create_user(username='John')
         jonathan = self.create_user(username='Jonathan')
 
@@ -237,6 +239,8 @@ class TestSnippetViewSet(Common, APITestCase):
         )
 
     def test_should_search_by_title_and_code(self):
+        force_rebuild_indices()
+
         owner = self.create_user()
         first_snippet = self.create_snippet(owner=owner, title='first title')
         second_snippet = self.create_snippet(owner=owner, title='second title')
