@@ -1,4 +1,4 @@
-from rest_framework.reverse import reverse
+import datetime as dt
 
 from drftutorial.snippets.serializers import UserSerializer, SnippetSerializer
 from .common import Common
@@ -44,6 +44,7 @@ class TestSnippetSerializer(Common):
             linenos=True,
             language='c',
             style='vim',
+            expired_at=dt.datetime.now() + dt.timedelta(days=10),
         )
         second_snippet = self.create_snippet(
             owner=owner,
@@ -52,6 +53,7 @@ class TestSnippetSerializer(Common):
             linenos=False,
             language='python',
             style='dracula',
+            expired_at=dt.datetime.now() + dt.timedelta(days=20),
         )
         self.assertEqual(
             SnippetSerializer([first_snippet, second_snippet], many=True, context={'request': None}).data,
@@ -64,6 +66,7 @@ class TestSnippetSerializer(Common):
                     'linenos': snippet.linenos,
                     'language': snippet.language,
                     'style': snippet.style,
+                    'expired_at_timestamp': snippet.expired_at.timestamp(),
                 }
                 for snippet in (first_snippet, second_snippet)
             ],

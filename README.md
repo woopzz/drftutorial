@@ -18,6 +18,9 @@
 - LimitOffsetPagination instead of PageNumberPagination.
 - Manage snippets on the admin portal.
 - Searching by ElasticSearch.
+- Disable time zones.
+- Introduce a new field: expired_at. So the app removes snippets which are expired.
+  And it is implemented by using Celery and its periodic tasks feature.
 
 ### Environment variables
 
@@ -32,6 +35,8 @@
 - ALLOWED_HOSTS
 
 - ELASTICSEARCH_HOSTS (e.g. http://elasticsearch:9200)
+
+- CELERY_BROKER_URL (e.g. redis://redis:6379/0)
 
 ### Initial setup
 

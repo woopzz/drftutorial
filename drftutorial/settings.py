@@ -15,6 +15,8 @@ from pathlib import Path
 
 import datetime as dt
 
+from celery.schedules import crontab
+
 def cast_to_literal(value):
     try:
         return ast.literal_eval(value)
@@ -112,11 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -179,6 +179,17 @@ ELASTICSEARCH_DSL = {
 ELASTICSEARCH_INDEX_NAMES = {
     'snippet': 'snippet',
     'user': 'user',
+}
+
+CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']
+CELERY_BEAT_SCHEDULE = {
+    'remove_expired_snippets': {
+        'task': 'drftutorial.snippets.tasks.remove_expired_snippets',
+        'schedule': crontab(minute=0, hour=0),  # Execute daily at midnight.
+        'options': {
+            'expires': 60 * 10,  # 10 minutes
+        },
+    }
 }
 
 DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))

@@ -35,6 +35,7 @@ class Snippet(models.Model):
         on_delete=models.CASCADE,
     )
     highlighted = models.TextField()
+    expired_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         title = self.title or 'No title'
@@ -43,6 +44,7 @@ class Snippet(models.Model):
         return f'{title} ({language}) ({style})'
 
     class Meta:
+        db_table = 'snippet'
         ordering = ['created']
 
     def save(self, *args, **kwargs):

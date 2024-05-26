@@ -1,3 +1,5 @@
+import datetime as dt
+
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
@@ -21,6 +23,7 @@ class TestModelSnippet(Common):
             title=title,
             owner=owner,
             linenos=True,
+            expired_at=dt.datetime.now(),
         )
 
         lexer = get_lexer_by_name(language)
