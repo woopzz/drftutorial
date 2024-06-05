@@ -192,7 +192,7 @@ CELERY_BEAT_SCHEDULE = {
     }
 }
 
-DEBUG = cast_to_literal(os.environ.get('DJANGO_DEBUG', 'False'))
+DEBUG = cast_to_literal(os.environ.get('APP_DEBUG', 'False'))
 if DEBUG:
     INSTALLED_APPS.append('silk')
     MIDDLEWARE.append('silk.middleware.SilkyMiddleware')

@@ -28,7 +28,7 @@ An extended Django REST Framework tutorial application.
 - POSTGRES_DATABASE_NAME (e.g. drftutorial)
 
 - DJANGO_SECRET_KEY (e.g. secret)
-- DJANGO_DEBUG (e.g. False)
+- APP_DEBUG (e.g. False)
 - ALLOWED_HOSTS (e.g. ['0.0.0.0'])
 
 - ELASTICSEARCH_HOSTS (e.g. http://elasticsearch:9200)

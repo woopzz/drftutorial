@@ -13,7 +13,7 @@
             "program": "${workspaceFolder}/manage.py",
             "console": "internalConsole",
             "env": {
-                "DJANGO_DEBUG": "True",
+                "APP_DEBUG": "True",
             }
         }
     ]
