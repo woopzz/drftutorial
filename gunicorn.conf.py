@@ -9,4 +9,4 @@ if debug and debug == 'True':
     reload = True
     workers = 1
 else:
-    workers = multiprocessing.cpu_count() * 2 + 1
+    workers = 2
