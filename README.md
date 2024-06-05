@@ -23,6 +23,7 @@ An extended Django REST Framework tutorial application.
 - Disable time zones.
 - Introduce a new field: expired_at. So the app removes snippets which are expired.
   And it is implemented by using Celery and its periodic tasks feature.
+- Gunicorn.
 
 ### Environment variables
 
