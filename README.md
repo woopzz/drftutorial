@@ -1,4 +1,6 @@
-# An extended Django REST Framework tutorial application
+# Drftutorial
+
+An extended Django REST Framework tutorial application.
 
 ### Differences
 
@@ -24,15 +26,15 @@
 
 ### Environment variables
 
-- POSTGRES_HOST
-- POSTGRES_PORT
-- POSTGRES_USER
-- POSTGRES_PASSWORD
-- POSTGRES_DATABASE_NAME
+- POSTGRES_HOST (e.g. db)
+- POSTGRES_PORT (e.g. 5432)
+- POSTGRES_USER (e.g. admin)
+- POSTGRES_PASSWORD (e.g. admin)
+- POSTGRES_DATABASE_NAME (e.g. drftutorial)
 
-- DJANGO_SECRET_KEY
-- DJANGO_DEBUG
-- ALLOWED_HOSTS
+- DJANGO_SECRET_KEY (e.g. secret)
+- DJANGO_DEBUG (e.g. False)
+- ALLOWED_HOSTS (e.g. ['0.0.0.0'])
 
 - ELASTICSEARCH_HOSTS (e.g. http://elasticsearch:9200)
 
