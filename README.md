@@ -4,26 +4,20 @@ An extended Django REST Framework tutorial application.
 
 ### Differences
 
-- Query optimization
-
-    For example `Snippet.objects.all().select_related('owner')`
-
-- API throttling
-
-    Authenticated users can do more requests per minute.
-    Also not many snippets can be created in one minute.
-
-- Tests
-- Filtering. Ordering.
+- Query optimization. Silk helps a lot.
+- API throttling.
+- Tests.
+- Ordering by a DRF built-in filter.
+- Filtering by Django-filter.
+- Searching by ElasticSearch.
 - JWT instead of sessions.
 - OpenAPI (Swagger) instead of Browsable API.
 - LimitOffsetPagination instead of PageNumberPagination.
+- Gunicorn as a WSGI server.
 - Manage snippets on the admin portal.
-- Searching by ElasticSearch.
 - Disable time zones.
 - Introduce a new field: expired_at. So the app removes snippets which are expired.
   And it is implemented by using Celery and its periodic tasks feature.
-- Gunicorn.
 
 ### Environment variables
 
