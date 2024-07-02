@@ -58,3 +58,25 @@ If you are going to run tests, you have to set up test indexes too.
 ```bash
 python manage.py search_index --rebuild --settings drftutorial.settings_testing
 ```
+
+### Deploy (AWS)
+
+I consider only free tier, so t2.micro (1Gb RAM) is the only option I have.
+I launched an RDS instance for a database, so I do not need it in `docker-compose.yml`.
+
+I changed ES_JAVA_OPTS to allocate only 128Mb of RAM to the JVM heap.
+`docker stats` shows me that the ElasticSearch container eats about 550Mb in this configuration.
+I tried to decrease the value to 68Mb, but it's not enough for ES. It crashed soon after it started. So, 128Mb.
+
+I tried to run my docker-compose.yml (except PostgreSQL).
+And it went out of RAM pretty quick. So I decided to run ElasticSearch on a different instance.
+
+So, we have two t2.micron instances. One for ElasticSearch and another one for the app, the celery worker and the celery beat worker.
+We want to install docker on both of them. In my experience, "Amazon linux 2023 AMI" works much better than "Amazon linux 2 AMI".
+But it doesn't have "amazon-linux-extras". Long story short, we can find instructions [here (Installing Docker on AL2023)](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/create-container-image.html).
+
+Start an ElasticSearch container with this command:
+
+```bash
+docker run -d --name elasticsearch -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e "ES_JAVA_OPTS=-Xms128m -Xmx128m" elasticsearch:8.13.4
+```

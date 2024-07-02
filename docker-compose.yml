@@ -1,0 +1,35 @@
+services:
+
+  app:
+    image: fr2ee/drftutorial
+    ports:
+      - 8000:8000
+    depends_on:
+      - redis
+    env_file:
+      - ./.env
+
+  celery_beat:
+    image: fr2ee/drftutorial
+    volumes:
+      - celerybeat-schedule:/app/celerybeat
+    depends_on:
+      - redis
+    env_file:
+      - ./.env
+    command: celery --app=drftutorial beat --loglevel=info --schedule=/app/celerybeat/schedule.db
+
+  celery_worker:
+    image: fr2ee/drftutorial
+    depends_on:
+      - redis
+    env_file:
+      - ./.env
+    command: celery --app=drftutorial worker --concurrency=1 --loglevel=info
+
+  redis:
+    image: redis:7.2
+
+volumes:
+  celerybeat-schedule:
+    driver: local
