@@ -21,12 +21,12 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/app
-      - celerybeat-schedule:/var/celerybeat
+      - celerybeat-schedule:/app/celerybeat
     depends_on:
       - redis
     env_file:
       - ./.env
-    command: celery --app=drftutorial beat --loglevel=info --schedule /var/celerybeat/schedule.db
+    command: celery --app=drftutorial beat --loglevel=info --schedule=/app/celerybeat/schedule.db
 
   celery_worker:
     build:

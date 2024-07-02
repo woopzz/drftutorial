@@ -22,6 +22,8 @@ COPY drftutorial/ $WORKDIR/drftutorial
 COPY manage.py $WORKDIR
 COPY gunicorn.conf.py $WORKDIR
 
+RUN mkdir /app/celerybeat
+
 RUN chown -R $USERNAME:$USERNAME $WORKDIR
 
 EXPOSE 8000
