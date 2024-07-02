@@ -34,6 +34,9 @@ SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 ALLOWED_HOSTS = cast_to_literal(os.environ['ALLOWED_HOSTS'])
 
+# Resolves CORS issues when we do not use HTTPS.
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
