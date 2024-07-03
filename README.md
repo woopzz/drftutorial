@@ -30,7 +30,8 @@ Also, you might want to create a new user to access the database from the app.
 [Why do I have to do this?](https://stackoverflow.com/a/26373972)
 
 ```
-CREATE DATABASE drftutorial WITH OWNER admin ENCODING 'utf-8';
+CREATE USER django WITH PASSWORD 'django';
+CREATE DATABASE drftutorial WITH OWNER django ENCODING 'utf-8';
 ```
 
 Next, you want to apply migrations.
