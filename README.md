@@ -109,3 +109,16 @@ By the way, here is a simple way to check indexes:
 ```
 curl "http://ES_HOST:ES_PORT/snippet/_search?pretty=true&q=*:*"
 ```
+
+#### Terraform
+
+Terraform is an infrastructure as code tool. So we don't need to run EC2 instances, an RDS instance, create security groups and so on by hand.
+What we do need is to type `terraform apply`.
+
+There is a cool video about Terraform basics on Youtube: [Why You NEED To Learn Terraform | Practical Tutorial](https://youtu.be/nvNqfgojocs)
+
+The configuration expects a public key named `drftutorial.pub` to be in the same folder with tf files. Quick note how to create an RSA key:
+
+```bash
+ssh-keygen -b 2048 -t rsa
+```
